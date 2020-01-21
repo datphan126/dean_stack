@@ -107,20 +107,14 @@ exports.createItem = function (params) { return __awaiter(void 0, void 0, void 0
         }
     });
 }); };
-exports.readItem = function (params, callback) { return __awaiter(void 0, void 0, void 0, function () {
+exports.readItem = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    var item;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, docClient.get(params, function (err, data) {
-                    if (err) {
-                        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-                    }
-                    else {
-                        callback(data);
-                    }
-                })];
+            case 0: return [4 /*yield*/, docClient.get(params).promise()];
             case 1:
-                _a.sent();
-                return [2 /*return*/];
+                item = _a.sent();
+                return [2 /*return*/, item.Item];
         }
     });
 }); };

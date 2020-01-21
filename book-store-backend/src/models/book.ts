@@ -4,7 +4,7 @@ import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const TABLE_NAME = "Books";
 
-export const createTable = async () => {
+export const createBooksTable = async () => {
     const params = {
         TableName: TABLE_NAME,
         KeySchema: [
@@ -36,16 +36,14 @@ export const addBook = async (title: string, isbn: string, author: string, pictu
     await DynamoDBAPI.createItem(params);
 }
 
-export const fetchBook = async (_id: string, callback: any) => {
+export const fetchBook = async (_id: string) => {
     const params = {
         TableName: TABLE_NAME,
         Key: {
             "_id": _id
         }
     };
-    await DynamoDBAPI.readItem(params, (response: Json) => {
-        callback(response);
-    });
+    return await DynamoDBAPI.readItem(params);
 }
 
 export const updateBook = async (_id: string, title: string, isbn: string, author: string, picture: string, price: string) => {
@@ -54,7 +52,7 @@ export const updateBook = async (_id: string, title: string, isbn: string, autho
         Key: {
             "_id": _id
         },
-        UpdateExpression: "set title=:title, isbn=:isbn, author=:author,picture=:picture,price=:price",
+        UpdateExpression: "set title=:title, isbn=:isbn, author=:author, picture=:picture, price=:price",
         ExpressionAttributeValues: {
             ":title": title,
             ":isbn": isbn,

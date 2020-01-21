@@ -1,33 +1,81 @@
-import mongoose from 'mongoose';
+import * as DynamoDBAPI from './dynamodb.api';
+import uuidv1 from 'uuid/v1'; // For generating time-based uuid
+import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
-type BirthdayCardModel = mongoose.Document & {
-    title: string;
-    material: string;
-    picture: string;
-    price: number;
-};
+const TABLE_NAME = "BDayCards";
 
-// Build a schema and use it to do the validation
-const schema = new mongoose.Schema({
-    title: { type: String, required: true },
-    material: { type: String, required: true },
-    picture: { type: String, required: true },
-    price: { type: String, required: true, min: 0 }
-});
-
-const Card = mongoose.model<BirthdayCardModel>('Card', schema);
-
-// Create a new card in the database
-export const addBirthdayCard = (title: string, material: string, picture: string, price: number) => {
-    new Card({ title, material, picture, price }).save();
+export const createBDayCardsTable = async () => {
+    const params = {
+        TableName: TABLE_NAME,
+        KeySchema: [
+            { AttributeName: "_id", KeyType: "HASH" },  //Partition key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: "_id", AttributeType: "S" }
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 10,
+            WriteCapacityUnits: 10
+        }
+    };
+    await DynamoDBAPI.createTable(params);
 }
 
-export const fetchBirthdayCards = async () => await Card.find({});
+export const addBirthdayCard = async (title: string, material: string, picture: string, price: string) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Item: {
+            "_id": uuidv1(),
+            "title": title,
+            "material": material,
+            "picture": picture,
+            "price": price
+        }
+    };
+    await DynamoDBAPI.createItem(params);
+}
 
-export const fetchBirthdayCard = async (id: string) => await Card.find({ _id: id });
+export const fetchBirthdayCard = async (_id: string) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Key: {
+            "_id": _id
+        }
+    };
+    return await DynamoDBAPI.readItem(params);
+}
 
-export const updateBirthdayCard = async (
-    id: string, title: string, material: string, picture: string, price: number
-) => await Card.findByIdAndUpdate(id, { title, material, picture, price });
+export const updateBirthdayCard = async (_id: string, title: string, material: string, picture: string, price: string) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Key: {
+            "_id": _id
+        },
+        UpdateExpression: "set title=:title, material=:material, picture=:picture, price=:price",
+        ExpressionAttributeValues: {
+            ":title": title,
+            ":material": material,
+            ":picture": picture,
+            ":price": price,
+        },
+        ReturnValues: "UPDATED_NEW" // instructs DynamoDB to return only the updated attributes
+    };
+    await DynamoDBAPI.updateItem(params);
+}
 
-export const deleteBirthdayCard = async (id: string) => await Card.deleteOne({ _id: id });
+export const deleteBirthdayCard = async (_id: string) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Key: {
+            "_id": _id
+        }
+    };
+    DynamoDBAPI.deleteItem(params);
+}
+
+export const fetchBirthdayCards = async () => {
+    const params = {
+        TableName: TABLE_NAME
+    };
+    return await DynamoDBAPI.scanTable(params);
+};

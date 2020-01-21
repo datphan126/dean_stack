@@ -19,9 +19,11 @@ var fetch_birthday_card_1 = __importDefault(require("./controllers/fetch-birthda
 var update_birthday_card_1 = __importDefault(require("./controllers/update-birthday-card"));
 var delete_birthday_card_1 = __importDefault(require("./controllers/delete-birthday-card"));
 var book_1 = require("./models/book");
+var birthday_card_1 = require("./models/birthday-card");
 dotenv_1.default.config();
 // Innitialize DynamoDB tables
-book_1.createTable();
+book_1.createBooksTable();
+birthday_card_1.createBDayCardsTable();
 // Initialize MongoDB
 mongoose_1.default.connect(process.env.DB_URI, { useNewUrlParser: true });
 // Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`

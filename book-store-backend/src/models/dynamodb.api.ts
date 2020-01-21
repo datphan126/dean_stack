@@ -48,14 +48,9 @@ export const createItem = async (params: any) => {
     });
 }
 
-export const readItem = async (params: any, callback: any) => {
-    await docClient.get(params, function (err, data) {
-        if (err) {
-            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-        } else {
-            callback(data);
-        }
-    });
+export const readItem = async (params: any) => {
+    let item = await docClient.get(params).promise();
+    return item.Item;
 }
 
 export const updateItem = async (params: any) => {

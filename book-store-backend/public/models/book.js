@@ -49,7 +49,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var DynamoDBAPI = __importStar(require("./dynamodb.api"));
 var v1_1 = __importDefault(require("uuid/v1")); // For generating time-based uuid
 var TABLE_NAME = "Books";
-exports.createTable = function () { return __awaiter(void 0, void 0, void 0, function () {
+exports.createBooksTable = function () { return __awaiter(void 0, void 0, void 0, function () {
     var params;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -97,7 +97,7 @@ exports.addBook = function (title, isbn, author, picture, price) { return __awai
         }
     });
 }); };
-exports.fetchBook = function (_id, callback) { return __awaiter(void 0, void 0, void 0, function () {
+exports.fetchBook = function (_id) { return __awaiter(void 0, void 0, void 0, function () {
     var params;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -108,12 +108,8 @@ exports.fetchBook = function (_id, callback) { return __awaiter(void 0, void 0, 
                         "_id": _id
                     }
                 };
-                return [4 /*yield*/, DynamoDBAPI.readItem(params, function (response) {
-                        callback(response);
-                    })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
+                return [4 /*yield*/, DynamoDBAPI.readItem(params)];
+            case 1: return [2 /*return*/, _a.sent()];
         }
     });
 }); };
@@ -127,7 +123,7 @@ exports.updateBook = function (_id, title, isbn, author, picture, price) { retur
                     Key: {
                         "_id": _id
                     },
-                    UpdateExpression: "set title=:title, isbn=:isbn, author=:author,picture=:picture,price=:price",
+                    UpdateExpression: "set title=:title, isbn=:isbn, author=:author, picture=:picture, price=:price",
                     ExpressionAttributeValues: {
                         ":title": title,
                         ":isbn": isbn,

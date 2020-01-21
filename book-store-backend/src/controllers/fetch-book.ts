@@ -5,7 +5,8 @@ import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const handler = async (req: Request, res: Response) => {
     try {
-        await fetchBook(req.params.id, (response: Json) => res.json(response));
+        const book = await fetchBook(req.params.id);
+        res.json(book);
     } catch (err) {
         console.error(err);
         res.status(500).end();

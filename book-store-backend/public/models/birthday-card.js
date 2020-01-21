@@ -35,45 +35,133 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
-// Build a schema and use it to do the validation
-var schema = new mongoose_1.default.Schema({
-    title: { type: String, required: true },
-    material: { type: String, required: true },
-    picture: { type: String, required: true },
-    price: { type: String, required: true, min: 0 }
-});
-var Card = mongoose_1.default.model('Card', schema);
-// Create a new card in the database
-exports.addBirthdayCard = function (title, material, picture, price) {
-    new Card({ title: title, material: material, picture: picture, price: price }).save();
-};
-exports.fetchBirthdayCards = function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, Card.find({})];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-exports.fetchBirthdayCard = function (id) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, Card.find({ _id: id })];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-exports.updateBirthdayCard = function (id, title, material, picture, price) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, Card.findByIdAndUpdate(id, { title: title, material: material, picture: picture, price: price })];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-exports.deleteBirthdayCard = function (id) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, Card.deleteOne({ _id: id })];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
+var DynamoDBAPI = __importStar(require("./dynamodb.api"));
+var v1_1 = __importDefault(require("uuid/v1")); // For generating time-based uuid
+var TABLE_NAME = "BDayCards";
+exports.createBDayCardsTable = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME,
+                    KeySchema: [
+                        { AttributeName: "_id", KeyType: "HASH" },
+                    ],
+                    AttributeDefinitions: [
+                        { AttributeName: "_id", AttributeType: "S" }
+                    ],
+                    ProvisionedThroughput: {
+                        ReadCapacityUnits: 10,
+                        WriteCapacityUnits: 10
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.createTable(params)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.addBirthdayCard = function (title, material, picture, price) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME,
+                    Item: {
+                        "_id": v1_1.default(),
+                        "title": title,
+                        "material": material,
+                        "picture": picture,
+                        "price": price
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.createItem(params)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.fetchBirthdayCard = function (_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME,
+                    Key: {
+                        "_id": _id
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.readItem(params)];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
+exports.updateBirthdayCard = function (_id, title, material, picture, price) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME,
+                    Key: {
+                        "_id": _id
+                    },
+                    UpdateExpression: "set title=:title, material=:material, picture=:picture, price=:price",
+                    ExpressionAttributeValues: {
+                        ":title": title,
+                        ":material": material,
+                        ":picture": picture,
+                        ":price": price,
+                    },
+                    ReturnValues: "UPDATED_NEW" // instructs DynamoDB to return only the updated attributes
+                };
+                return [4 /*yield*/, DynamoDBAPI.updateItem(params)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteBirthdayCard = function (_id) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        params = {
+            TableName: TABLE_NAME,
+            Key: {
+                "_id": _id
+            }
+        };
+        DynamoDBAPI.deleteItem(params);
+        return [2 /*return*/];
+    });
+}); };
+exports.fetchBirthdayCards = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME
+                };
+                return [4 /*yield*/, DynamoDBAPI.scanTable(params)];
+            case 1: return [2 /*return*/, _a.sent()];
+        }
+    });
+}); };
 //# sourceMappingURL=birthday-card.js.map

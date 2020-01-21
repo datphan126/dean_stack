@@ -29,12 +29,12 @@ export class BirthdayCardFormComponent implements OnInit {
     // Get the url pramater
     this.cardId = this.route.snapshot.paramMap.get('id');
     // Load the card data from the database if a card id is passed
-    if (this.cardId) this.apiService.fetchBirthdayCard(this.cardId).subscribe((data: Card[]) => {
-      if (data.length !== 0) {
-        this.title = data[0].title;
-        this.material = data[0].material;
-        this.price = data[0].price;
-        this.picture = data[0].picture;
+    if (this.cardId) this.apiService.fetchBirthdayCard(this.cardId).subscribe((data: Card) => {
+      if (data) {
+        this.title = data.title;
+        this.material = data.material;
+        this.price = data.price;
+        this.picture = data.picture;
       } else this.cardId = null;
     });
   }

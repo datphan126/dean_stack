@@ -38,14 +38,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var book_1 = require("../models/book");
 var handler = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var err_1;
+    var book, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, book_1.fetchBook(req.params.id, function (response) { return res.json(response); })];
+                return [4 /*yield*/, book_1.fetchBook(req.params.id)];
             case 1:
-                _a.sent();
+                book = _a.sent();
+                res.json(book);
                 return [3 /*break*/, 3];
             case 2:
                 err_1 = _a.sent();

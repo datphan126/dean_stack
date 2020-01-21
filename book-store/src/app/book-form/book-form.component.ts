@@ -31,13 +31,13 @@ export class BookFormComponent implements OnInit {
     // Get the url pramater
     this.bookId = this.route.snapshot.paramMap.get('id');
     // Load the book data from the database if a book id is passed
-    if (this.bookId) this.apiService.fetchBook(this.bookId).subscribe((data: Book[]) => {
-      if (data) {
-        this.title = data['Item'].title;
-        this.isbn = data['Item'].isbn;
-        this.author = data['Item'].author;
-        this.price = data['Item'].price;
-        this.picture = data['Item'].picture;
+    if (this.bookId) this.apiService.fetchBook(this.bookId).subscribe((data: Book) => {
+    if (data) {
+        this.title = data.title;
+        this.isbn = data.isbn;
+        this.author = data.author;
+        this.price = data.price;
+        this.picture = data.picture;
       } else this.bookId = null;
     });
   }
