@@ -53,14 +53,13 @@ export const readItem = async (params: any, callback: any) => {
         if (err) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
-            // console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
             callback(data);
         }
     });
 }
 
-export let updateItem = (params: any) => {
-    docClient.update(params, function (err, data) {
+export const updateItem = async (params: any) => {
+    await docClient.update(params, function (err, data) {
         if (err) {
             console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
@@ -69,8 +68,8 @@ export let updateItem = (params: any) => {
     });
 }
 
-export let deleteItem = (params: any) => {
-    docClient.delete(params, function (err, data) {
+export const deleteItem = async (params: any) => {
+    await docClient.delete(params, function (err, data) {
         if (err) {
             console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
         } else {

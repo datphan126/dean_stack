@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { fetchBook } from '../models/book_new';
+import { fetchBook } from '../models/book';
 import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const handler = async (req: Request, res: Response) => {

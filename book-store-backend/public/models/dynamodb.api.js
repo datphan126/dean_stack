@@ -115,7 +115,6 @@ exports.readItem = function (params, callback) { return __awaiter(void 0, void 0
                         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
                     }
                     else {
-                        // console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
                         callback(data);
                     }
                 })];
@@ -125,26 +124,40 @@ exports.readItem = function (params, callback) { return __awaiter(void 0, void 0
         }
     });
 }); };
-exports.updateItem = function (params) {
-    docClient.update(params, function (err, data) {
-        if (err) {
-            console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-        }
-        else {
-            console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-        }
-    });
-};
-exports.deleteItem = function (params) {
-    docClient.delete(params, function (err, data) {
-        if (err) {
-            console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
-        }
-        else {
-            console.log("DeleteItem succeeded:", JSON.stringify(data, null, 2));
+exports.updateItem = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, docClient.update(params, function (err, data) {
+                    if (err) {
+                        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+                    }
+                    else {
+                        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+                    }
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
         }
     });
-};
+}); };
+exports.deleteItem = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, docClient.delete(params, function (err, data) {
+                    if (err) {
+                        console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
+                    }
+                    else {
+                        console.log("DeleteItem succeeded:", JSON.stringify(data, null, 2));
+                    }
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.scanTable = function (params) { return __awaiter(void 0, void 0, void 0, function () {
     var scanResults, items;
     return __generator(this, function (_a) {

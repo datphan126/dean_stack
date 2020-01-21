@@ -15,7 +15,7 @@ import fetchBirthdayCard from './controllers/fetch-birthday-card';
 import updateBirthdayCardController from './controllers/update-birthday-card';
 import deleteBirthdayCardController from './controllers/delete-birthday-card';
 
-import {createTable as createBookTable} from './models/book_new';
+import {createTable as createBookTable} from './models/book';
 
 dotenv.config();
 
