@@ -128,17 +128,11 @@ var scanParams = {
 };
 console.log("Retrieving all items...");
 // DynamoDBAPI.retrieveAllItems(scanParams);
-var scanHandler = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var scanResults;
+exports.fetchBooks = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log("I was here");
-                return [4 /*yield*/, DynamoDBAPI.scanTable(scanParams)];
-            case 1:
-                scanResults = _a.sent();
-                scanResults.forEach(function (item) { return console.log(item); });
-                return [2 /*return*/];
+            case 0: return [4 /*yield*/, DynamoDBAPI.scanTable(scanParams)];
+            case 1: return [2 /*return*/, _a.sent()];
         }
     });
 }); };

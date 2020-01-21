@@ -78,10 +78,8 @@ let scanParams = {
 
 console.log("Retrieving all items...");
 // DynamoDBAPI.retrieveAllItems(scanParams);
-let scanHandler = async () => {
-    console.log("I was here");
-    const scanResults = await DynamoDBAPI.scanTable(scanParams);
-    scanResults.forEach(item => console.log(item));
+export const fetchBooks = async () => {
+    return await DynamoDBAPI.scanTable(scanParams);
 };
 
 // scanHandler();

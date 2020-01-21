@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { fetchBooks } from '../models/book';
+import { fetchBooks } from '../models/book_new';
 
 const handler = async (req: Request, res: Response) => {
     try {
