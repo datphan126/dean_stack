@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var book_1 = require("../models/book");
+var book_new_1 = require("../models/book_new");
 var handler = function (req, res) {
     var _a = req.body, title = _a.title, isbn = _a.isbn, author = _a.author, picture = _a.picture, price = _a.price;
     try {
-        book_1.addBook(title, isbn, author, picture, price);
+        book_new_1.addBook(title, isbn, author, picture, price);
     }
     catch (err) {
         console.error(err);

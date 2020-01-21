@@ -15,9 +15,12 @@ import fetchBirthdayCard from './controllers/fetch-birthday-card';
 import updateBirthdayCardController from './controllers/update-birthday-card';
 import deleteBirthdayCardController from './controllers/delete-birthday-card';
 
-import DynamoDBAPI
+import {createTable as createBookTable} from './models/book_new';
 
 dotenv.config();
+
+// Innitialize DynamoDB tables
+createBookTable();
 
 // Initialize MongoDB
 mongoose.connect(process.env.DB_URI as string, { useNewUrlParser: true });

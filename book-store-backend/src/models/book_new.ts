@@ -1,4 +1,4 @@
-import * as DynamoDBUtil from './dynamodb-utils';
+import * as DynamoDBAPI from './dynamodb.api';
 import uuidv1 from 'uuid/v1'; // For generating time-based uuid
 
 const TABLE_NAME = "Books";
@@ -17,23 +17,23 @@ let createTableParams = {
     }
 };
 
-DynamoDBUtil.createTable(createTableParams, TABLE_NAME);
+export const createTable = async () => await DynamoDBAPI.createTable(createTableParams, TABLE_NAME);
 
-let createItemParams = {
-    TableName: TABLE_NAME,
-    Item: {
-        "_id": uuidv1(),
-        "year": 2018,
-        "title": "Jokers",
-        "info": {
-            "plot": "Nothing happens at all.",
-            "rating": 7.9
+console.log("Adding a new book...");
+export const addBook = async (title: string, isbn: string, author: string, picture: string, price: string) => {
+    const createItemParams = {
+        TableName: TABLE_NAME,
+        Item: {
+            "_id": uuidv1(),
+            "title": title,
+            "isbn": isbn,
+            "author": author,
+            "picture": picture,
+            "price": price
         }
-    }
-};
-
-// console.log("Adding a new item...");
-// DynamoDBUtil.createItem(createItemParams);
+    };
+    await DynamoDBAPI.createItem(createItemParams);
+}
 
 let readItemParams = {
     TableName: TABLE_NAME,
@@ -43,7 +43,7 @@ let readItemParams = {
 };
 
 // console.log("Reading an item...");
-// DynamoDBUtil.readItem(readItemParams);
+// DynamoDBAPI.readItem(readItemParams);
 
 let updateItemParams = {
     TableName: TABLE_NAME,
@@ -60,7 +60,7 @@ let updateItemParams = {
 };
 
 // console.log("Updating an item...");
-// DynamoDBUtil.updateItem(updateItemParams);
+// DynamoDBAPI.updateItem(updateItemParams);
 
 let deleteItemParams = {
     TableName: TABLE_NAME,
@@ -70,18 +70,18 @@ let deleteItemParams = {
 };
 
 // console.log("Deleting an item...");
-// DynamoDBUtil.deleteItem(deleteItemParams);
+// DynamoDBAPI.deleteItem(deleteItemParams);
 
 let scanParams = {
     TableName: TABLE_NAME
 };
 
 console.log("Retrieving all items...");
-// DynamoDBUtil.retrieveAllItems(scanParams);
+// DynamoDBAPI.retrieveAllItems(scanParams);
 let scanHandler = async () => {
     console.log("I was here");
-    const scanResults = await DynamoDBUtil.scanTable(scanParams);
+    const scanResults = await DynamoDBAPI.scanTable(scanParams);
     scanResults.forEach(item => console.log(item));
 };
 
-scanHandler();
+// scanHandler();

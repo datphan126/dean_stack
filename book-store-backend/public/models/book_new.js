@@ -46,9 +46,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var DynamoDBUtil = __importStar(require("./dynamodb-utils"));
+var DynamoDBAPI = __importStar(require("./dynamodb.api"));
 var v1_1 = __importDefault(require("uuid/v1")); // For generating time-based uuid
-var TABLE_NAME = "Movies01";
+var TABLE_NAME = "Books";
 var createTableParams = {
     TableName: TABLE_NAME,
     KeySchema: [
@@ -62,21 +62,36 @@ var createTableParams = {
         WriteCapacityUnits: 10
     }
 };
-DynamoDBUtil.createTable(createTableParams, TABLE_NAME);
-var createItemParams = {
-    TableName: TABLE_NAME,
-    Item: {
-        "_id": v1_1.default(),
-        "year": 2018,
-        "title": "Jokers",
-        "info": {
-            "plot": "Nothing happens at all.",
-            "rating": 7.9
-        }
+exports.createTable = function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+    switch (_a.label) {
+        case 0: return [4 /*yield*/, DynamoDBAPI.createTable(createTableParams, TABLE_NAME)];
+        case 1: return [2 /*return*/, _a.sent()];
     }
-};
-// console.log("Adding a new item...");
-// DynamoDBUtil.createItem(createItemParams);
+}); }); };
+console.log("Adding a new book...");
+exports.addBook = function (title, isbn, author, picture, price) { return __awaiter(void 0, void 0, void 0, function () {
+    var createItemParams;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                createItemParams = {
+                    TableName: TABLE_NAME,
+                    Item: {
+                        "_id": v1_1.default(),
+                        "title": title,
+                        "isbn": isbn,
+                        "author": author,
+                        "picture": picture,
+                        "price": price
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.createItem(createItemParams)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 var readItemParams = {
     TableName: TABLE_NAME,
     Key: {
@@ -84,7 +99,7 @@ var readItemParams = {
     }
 };
 // console.log("Reading an item...");
-// DynamoDBUtil.readItem(readItemParams);
+// DynamoDBAPI.readItem(readItemParams);
 var updateItemParams = {
     TableName: TABLE_NAME,
     Key: {
@@ -99,7 +114,7 @@ var updateItemParams = {
     ReturnValues: "UPDATED_NEW" // instructs DynamoDB to return only the updated attributes
 };
 // console.log("Updating an item...");
-// DynamoDBUtil.updateItem(updateItemParams);
+// DynamoDBAPI.updateItem(updateItemParams);
 var deleteItemParams = {
     TableName: TABLE_NAME,
     Key: {
@@ -107,19 +122,19 @@ var deleteItemParams = {
     }
 };
 // console.log("Deleting an item...");
-// DynamoDBUtil.deleteItem(deleteItemParams);
+// DynamoDBAPI.deleteItem(deleteItemParams);
 var scanParams = {
     TableName: TABLE_NAME
 };
 console.log("Retrieving all items...");
-// DynamoDBUtil.retrieveAllItems(scanParams);
+// DynamoDBAPI.retrieveAllItems(scanParams);
 var scanHandler = function () { return __awaiter(void 0, void 0, void 0, function () {
     var scanResults;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log("I was here");
-                return [4 /*yield*/, DynamoDBUtil.scanTable(scanParams)];
+                return [4 /*yield*/, DynamoDBAPI.scanTable(scanParams)];
             case 1:
                 scanResults = _a.sent();
                 scanResults.forEach(function (item) { return console.log(item); });
@@ -127,5 +142,5 @@ var scanHandler = function () { return __awaiter(void 0, void 0, void 0, functio
         }
     });
 }); };
-scanHandler();
+// scanHandler();
 //# sourceMappingURL=book_new.js.map

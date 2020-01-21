@@ -1,8 +1,11 @@
 import AWS from 'aws-sdk';
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
+import dotenv from 'dotenv';
 
-const REGION = "us-west-2";
-const ENDPOINT = "http://dynamodb.us-west-2.amazonaws.com";
+dotenv.config();
+
+const REGION = `${process.env.DYNAMODB_REGION}`;
+const ENDPOINT = `${process.env.DYNAMODB_ENDPOINT}`;
 
 let serviceConfigOptions: ServiceConfigurationOptions = {
     region: REGION,
