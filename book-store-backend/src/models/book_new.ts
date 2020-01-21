@@ -1,27 +1,28 @@
 import * as DynamoDBAPI from './dynamodb.api';
 import uuidv1 from 'uuid/v1'; // For generating time-based uuid
+import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const TABLE_NAME = "Books";
 
-let createTableParams = {
-    TableName: TABLE_NAME,
-    KeySchema: [
-        { AttributeName: "_id", KeyType: "HASH" },  //Partition key
-    ],
-    AttributeDefinitions: [
-        { AttributeName: "_id", AttributeType: "S" }
-    ],
-    ProvisionedThroughput: {
-        ReadCapacityUnits: 10,
-        WriteCapacityUnits: 10
-    }
-};
+export const createTable = async () => {
+    const params = {
+        TableName: TABLE_NAME,
+        KeySchema: [
+            { AttributeName: "_id", KeyType: "HASH" },  //Partition key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: "_id", AttributeType: "S" }
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 10,
+            WriteCapacityUnits: 10
+        }
+    };
+    await DynamoDBAPI.createTable(params);
+}
 
-export const createTable = async () => await DynamoDBAPI.createTable(createTableParams, TABLE_NAME);
-
-console.log("Adding a new book...");
 export const addBook = async (title: string, isbn: string, author: string, picture: string, price: string) => {
-    const createItemParams = {
+    const params = {
         TableName: TABLE_NAME,
         Item: {
             "_id": uuidv1(),
@@ -32,18 +33,20 @@ export const addBook = async (title: string, isbn: string, author: string, pictu
             "price": price
         }
     };
-    await DynamoDBAPI.createItem(createItemParams);
+    await DynamoDBAPI.createItem(params);
 }
 
-let readItemParams = {
-    TableName: TABLE_NAME,
-    Key: {
-        "_id": "60983f30-3b34-11ea-9287-85f896cb5351"
-    }
-};
-
-// console.log("Reading an item...");
-// DynamoDBAPI.readItem(readItemParams);
+export const fetchBook = async (id: string, callback: any) => {
+    const params = {
+        TableName: TABLE_NAME,
+        Key: {
+            "_id": id
+        }
+    };
+    await DynamoDBAPI.readItem(params, (response: Json) => {
+        callback(response);
+    });
+}
 
 let updateItemParams = {
     TableName: TABLE_NAME,
@@ -72,14 +75,9 @@ let deleteItemParams = {
 // console.log("Deleting an item...");
 // DynamoDBAPI.deleteItem(deleteItemParams);
 
-let scanParams = {
-    TableName: TABLE_NAME
-};
-
-console.log("Retrieving all items...");
-// DynamoDBAPI.retrieveAllItems(scanParams);
 export const fetchBooks = async () => {
-    return await DynamoDBAPI.scanTable(scanParams);
+    const params = {
+        TableName: TABLE_NAME
+    };
+    return await DynamoDBAPI.scanTable(params);
 };
-
-// scanHandler();

@@ -49,32 +49,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var DynamoDBAPI = __importStar(require("./dynamodb.api"));
 var v1_1 = __importDefault(require("uuid/v1")); // For generating time-based uuid
 var TABLE_NAME = "Books";
-var createTableParams = {
-    TableName: TABLE_NAME,
-    KeySchema: [
-        { AttributeName: "_id", KeyType: "HASH" },
-    ],
-    AttributeDefinitions: [
-        { AttributeName: "_id", AttributeType: "S" }
-    ],
-    ProvisionedThroughput: {
-        ReadCapacityUnits: 10,
-        WriteCapacityUnits: 10
-    }
-};
-exports.createTable = function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
-    switch (_a.label) {
-        case 0: return [4 /*yield*/, DynamoDBAPI.createTable(createTableParams, TABLE_NAME)];
-        case 1: return [2 /*return*/, _a.sent()];
-    }
-}); }); };
-console.log("Adding a new book...");
-exports.addBook = function (title, isbn, author, picture, price) { return __awaiter(void 0, void 0, void 0, function () {
-    var createItemParams;
+exports.createTable = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                createItemParams = {
+                params = {
+                    TableName: TABLE_NAME,
+                    KeySchema: [
+                        { AttributeName: "_id", KeyType: "HASH" },
+                    ],
+                    AttributeDefinitions: [
+                        { AttributeName: "_id", AttributeType: "S" }
+                    ],
+                    ProvisionedThroughput: {
+                        ReadCapacityUnits: 10,
+                        WriteCapacityUnits: 10
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.createTable(params)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.addBook = function (title, isbn, author, picture, price) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
                     TableName: TABLE_NAME,
                     Item: {
                         "_id": v1_1.default(),
@@ -85,21 +90,33 @@ exports.addBook = function (title, isbn, author, picture, price) { return __awai
                         "price": price
                     }
                 };
-                return [4 /*yield*/, DynamoDBAPI.createItem(createItemParams)];
+                return [4 /*yield*/, DynamoDBAPI.createItem(params)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); };
-var readItemParams = {
-    TableName: TABLE_NAME,
-    Key: {
-        "_id": "60983f30-3b34-11ea-9287-85f896cb5351"
-    }
-};
-// console.log("Reading an item...");
-// DynamoDBAPI.readItem(readItemParams);
+exports.fetchBook = function (id, callback) { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                params = {
+                    TableName: TABLE_NAME,
+                    Key: {
+                        "_id": id
+                    }
+                };
+                return [4 /*yield*/, DynamoDBAPI.readItem(params, function (response) {
+                        callback(response);
+                    })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 var updateItemParams = {
     TableName: TABLE_NAME,
     Key: {
@@ -123,18 +140,17 @@ var deleteItemParams = {
 };
 // console.log("Deleting an item...");
 // DynamoDBAPI.deleteItem(deleteItemParams);
-var scanParams = {
-    TableName: TABLE_NAME
-};
-console.log("Retrieving all items...");
-// DynamoDBAPI.retrieveAllItems(scanParams);
 exports.fetchBooks = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var params;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, DynamoDBAPI.scanTable(scanParams)];
+            case 0:
+                params = {
+                    TableName: TABLE_NAME
+                };
+                return [4 /*yield*/, DynamoDBAPI.scanTable(params)];
             case 1: return [2 /*return*/, _a.sent()];
         }
     });
 }); };
-// scanHandler();
 //# sourceMappingURL=book_new.js.map

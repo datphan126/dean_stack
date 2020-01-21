@@ -32,13 +32,13 @@ export class BookFormComponent implements OnInit {
     this.bookId = this.route.snapshot.paramMap.get('id');
     // Load the book data from the database if a book id is passed
     if (this.bookId) this.apiService.fetchBook(this.bookId).subscribe((data: Book[]) => {
-      if (data.length !== 0 ) {
-        this.title = data[0].title;
-        this.isbn = data[0].isbn;
-        this.author = data[0].author;
-        this.price = data[0].price;
-        this.picture = data[0].picture;
-      } else this.bookId = null;  
+      if (data) {
+        this.title = data['Item'].title;
+        this.isbn = data['Item'].isbn;
+        this.author = data['Item'].author;
+        this.price = data['Item'].price;
+        this.picture = data['Item'].picture;
+      } else this.bookId = null;
     });
   }
 
@@ -49,7 +49,7 @@ export class BookFormComponent implements OnInit {
       message = 'Please finish the form.';
     else if (!BookFormComponent.URL_REGEXP.test(this.picture))
       message = 'The picture should be start as http:// or https://';
-    else if (this.price < 0 )
+    else if (this.price < 0)
       message = 'Please offer a price equal or greater than 0.'
     else {
       // Call the add book API and reset all form input vaules

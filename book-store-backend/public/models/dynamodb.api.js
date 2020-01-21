@@ -54,26 +54,35 @@ var docClient = new aws_sdk_1.default.DynamoDB.DocumentClient({
     endpoint: ENDPOINT,
     convertEmptyValues: true
 });
-exports.createTable = function (params, tableName) { return __awaiter(void 0, void 0, void 0, function () {
-    var tableNameParams;
+exports.createTable = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    var checkTableParams;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                tableNameParams = {
-                    TableName: tableName
+                checkTableParams = {
+                    TableName: params.TableName
                 };
-                return [4 /*yield*/, dynamodb.describeTable(tableNameParams, function (err, data) {
-                        // If table does not exist, create a new table
-                        if (err) {
-                            dynamodb.createTable(params, function (err, data) {
-                                if (err) {
-                                    console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
-                                }
-                                else {
-                                    console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+                return [4 /*yield*/, dynamodb.describeTable(checkTableParams, function (err, data) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        if (!err) return [3 /*break*/, 2];
+                                        return [4 /*yield*/, dynamodb.createTable(params, function (err, data) {
+                                                if (err) {
+                                                    console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
+                                                }
+                                                else {
+                                                    console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+                                                }
+                                            })];
+                                    case 1:
+                                        _a.sent();
+                                        _a.label = 2;
+                                    case 2: return [2 /*return*/];
                                 }
                             });
-                        }
+                        });
                     })];
             case 1:
                 _a.sent();
@@ -81,26 +90,41 @@ exports.createTable = function (params, tableName) { return __awaiter(void 0, vo
         }
     });
 }); };
-exports.createItem = function (params) {
-    docClient.put(params, function (err, data) {
-        if (err) {
-            console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-        }
-        else {
-            console.log("Added item:", JSON.stringify(data, null, 2));
-        }
-    });
-};
-exports.readItem = function (params) {
-    docClient.get(params, function (err, data) {
-        if (err) {
-            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-        }
-        else {
-            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+exports.createItem = function (params) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, docClient.put(params, function (err, data) {
+                    if (err) {
+                        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                    }
+                    else {
+                        console.log("Added item:", JSON.stringify(data, null, 2));
+                    }
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
         }
     });
-};
+}); };
+exports.readItem = function (params, callback) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, docClient.get(params, function (err, data) {
+                    if (err) {
+                        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+                    }
+                    else {
+                        // console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+                        callback(data);
+                    }
+                })];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.updateItem = function (params) {
     docClient.update(params, function (err, data) {
         if (err) {

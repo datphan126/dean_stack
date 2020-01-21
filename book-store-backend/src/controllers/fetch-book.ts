@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import { fetchBook } from '../models/book';
+import { fetchBook } from '../models/book_new';
+import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const handler = async (req: Request, res: Response) => {
     try {
-        const book = await fetchBook(req.params.id);
-        res.json(book);
+        await fetchBook(req.params.id, (response: Json) => res.json(response));
     } catch (err) {
         console.error(err);
         res.status(500).end();

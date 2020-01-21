@@ -20,14 +20,14 @@ let docClient = new AWS.DynamoDB.DocumentClient({
     convertEmptyValues: true
 });
 
-export let createTable = async (params: any, tableName: string) => {
-    let tableNameParams = {
-        TableName: tableName
+export const createTable = async (params: any) => {
+    const checkTableParams = {
+        TableName: params.TableName
     };
-    await dynamodb.describeTable(tableNameParams, function (err, data) {
+    await dynamodb.describeTable(checkTableParams, async function (err, data) {
         // If table does not exist, create a new table
         if (err) {
-            dynamodb.createTable(params, function (err, data) {
+            await dynamodb.createTable(params, function (err, data) {
                 if (err) {
                     console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
                 } else {
@@ -38,8 +38,8 @@ export let createTable = async (params: any, tableName: string) => {
     });
 }
 
-export let createItem = (params: any) => {
-    docClient.put(params, function (err, data) {
+export const createItem = async (params: any) => {
+    await docClient.put(params, function (err, data) {
         if (err) {
             console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
@@ -48,12 +48,13 @@ export let createItem = (params: any) => {
     });
 }
 
-export let readItem = (params: any) => {
-    docClient.get(params, function (err, data) {
+export const readItem = async (params: any, callback: any) => {
+    await docClient.get(params, function (err, data) {
         if (err) {
             console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
         } else {
-            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+            // console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+            callback(data);
         }
     });
 }
