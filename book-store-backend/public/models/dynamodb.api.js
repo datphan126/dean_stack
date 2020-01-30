@@ -44,11 +44,14 @@ var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 var REGION = "" + process.env.DYNAMODB_REGION;
 var ENDPOINT = "" + process.env.DYNAMODB_ENDPOINT;
+// Setup connection configurations for DynamoDB
 var serviceConfigOptions = {
     region: REGION,
     endpoint: ENDPOINT
 };
 var dynamodb = new aws_sdk_1.default.DynamoDB(serviceConfigOptions);
+// Set connection configurations for DocumentClient class
+// This class is used for performing CRUD tasks in a DynamoDB table
 var docClient = new aws_sdk_1.default.DynamoDB.DocumentClient({
     region: REGION,
     endpoint: ENDPOINT,
@@ -68,6 +71,7 @@ exports.createTable = function (params) { return __awaiter(void 0, void 0, void 
                                 switch (_a.label) {
                                     case 0:
                                         if (!err) return [3 /*break*/, 2];
+                                        // Create table
                                         return [4 /*yield*/, dynamodb.createTable(params, function (err, data) {
                                                 if (err) {
                                                     console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
@@ -77,6 +81,7 @@ exports.createTable = function (params) { return __awaiter(void 0, void 0, void 
                                                 }
                                             })];
                                     case 1:
+                                        // Create table
                                         _a.sent();
                                         _a.label = 2;
                                     case 2: return [2 /*return*/];

@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
 import cors from 'cors';
 
 import addBookController from './controllers/add-book';
@@ -23,13 +22,6 @@ dotenv.config();
 // Innitialize DynamoDB tables
 createBooksTable();
 createBDayCardsTable();
-
-// Initialize MongoDB
-mongoose.connect(process.env.DB_URI as string, { useNewUrlParser: true });
-// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
-// by default, you need to set it to false.
-mongoose.set('useFindAndModify', false);
-const db = mongoose.connection;
 
 const app = express();
 

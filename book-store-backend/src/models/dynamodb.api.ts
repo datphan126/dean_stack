@@ -7,6 +7,7 @@ dotenv.config();
 const REGION = `${process.env.DYNAMODB_REGION}`;
 const ENDPOINT = `${process.env.DYNAMODB_ENDPOINT}`;
 
+// Setup connection configurations for DynamoDB
 let serviceConfigOptions: ServiceConfigurationOptions = {
     region: REGION,
     endpoint: ENDPOINT
@@ -14,6 +15,8 @@ let serviceConfigOptions: ServiceConfigurationOptions = {
 
 let dynamodb = new AWS.DynamoDB(serviceConfigOptions);
 
+// Set connection configurations for DocumentClient class
+// This class is used for performing CRUD tasks in a DynamoDB table
 let docClient = new AWS.DynamoDB.DocumentClient({
     region: REGION,
     endpoint: ENDPOINT,
@@ -27,6 +30,7 @@ export const createTable = async (params: any) => {
     await dynamodb.describeTable(checkTableParams, async function (err, data) {
         // If table does not exist, create a new table
         if (err) {
+            // Create table
             await dynamodb.createTable(params, function (err, data) {
                 if (err) {
                     console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
@@ -76,6 +80,10 @@ export const deleteItem = async (params: any) => {
 export const scanTable = async (params: any) => {
     let scanResults: any[] = [];
     let items;
+    // Scan for all items in a particular table and save the result to the scanResults array.
+    // Since DynamoDB has a 1MB limit on the amount of data it will retrieve in a single request,
+    // we need to send multiple requests. We check the LastEvaluatedKey to know whether or not
+    // the scan has reached the end.
     do {
         items = await docClient.scan(params).promise();
         items.Items!.forEach((item) => scanResults.push(item));

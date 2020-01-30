@@ -32,6 +32,15 @@ export class BookFormComponent implements OnInit {
     this.bookId = this.route.snapshot.paramMap.get('id');
     // Load the book data from the database if a book id is passed
     if (this.bookId) this.apiService.fetchBook(this.bookId).subscribe((data: Book) => {
+    // Bad code
+    // if (data) {
+    //   this.title = data[0].title;
+    //   this.isbn = data[0].isbn;
+    //   this.author = data[0].author;
+    //   this.price = data[0].price;
+    //   this.picture = data[0].picture;
+    // } else this.bookId = null;
+    // Good code
     if (data) {
         this.title = data.title;
         this.isbn = data.isbn;

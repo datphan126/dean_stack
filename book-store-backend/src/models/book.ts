@@ -1,6 +1,5 @@
 import * as DynamoDBAPI from './dynamodb.api';
 import uuidv1 from 'uuid/v1'; // For generating time-based uuid
-import { Json } from 'aws-sdk/clients/marketplacecatalog';
 
 const TABLE_NAME = "Books";
 
